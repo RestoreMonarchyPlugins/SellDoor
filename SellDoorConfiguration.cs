@@ -1,4 +1,5 @@
 ﻿using Rocket.API;
+using SellDoor.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,10 @@ namespace SellDoor
     public class SellDoorConfiguration : IRocketPluginConfiguration
     {
         public string MessageColor { get; set; }
-        public bool IsAllowedToDestroy { get; set; }
 
         public void LoadDefaults()
         {
             MessageColor = "green";
-            IsAllowedToDestroy = false;
         }
     }
 }

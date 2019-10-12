@@ -1,9 +1,11 @@
-﻿using Rocket.API;
+﻿using fr34kyn01535.Uconomy;
+using Rocket.API;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
 using SDG.Framework.Utilities;
 using SDG.Unturned;
 using SellDoor.Models;
+using SellDoor.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +15,13 @@ using UnityEngine;
 
 namespace SellDoor.Commands
 {
-    public class CostDoorCommand : IRocketCommand
+    public class BuyDoorCommand : IRocketCommand
     {
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public string Name => "costdoor";
+        public string Name => "buydoor";
 
-        public string Help => "Checks the door's you are point at price";
+        public string Help => "Buy the door you are pointing at";
 
         public string Syntax => string.Empty;
 
@@ -37,8 +39,21 @@ namespace SellDoor.Commands
             {
                 if (SellDoorPlugin.Instance.DoorsCache.TryGetValue(doorHinge.door.transform, out DoorData doorData))
                 {
-                    UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("CostDoorPrice", doorData.Price.ToString("C")), SellDoorPlugin.Instance.MessageColor);
-                } else
+                    decimal balance = Uconomy.Instance.Database.GetBalance(caller.Id);
+                    
+                    if (balance < doorData.Price)
+                    {
+                        UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("BuyDoorCantAfford"), SellDoorPlugin.Instance.MessageColor);
+                    } else
+                    {
+                        Uconomy.Instance.Database.IncreaseBalance(caller.Id, doorData.Price * -1);
+                        Uconomy.Instance.Database.IncreaseBalance(doorData.SellerID.ToString(), doorData.Price);
+                        UnturnedUtility.ChangeBarricadeOwner(doorHinge.door.transform, player.CSteamID.m_SteamID, player.SteamGroupID.m_SteamID);
+                        SellDoorPlugin.Instance.DoorsCache.Remove(doorHinge.door.transform);
+                        UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("BuyDoorSuccess", doorData.Price.ToString("C")), SellDoorPlugin.Instance.MessageColor);
+                    }
+                }
+                else
                 {
                     UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("DoorNotForSale"), SellDoorPlugin.Instance.MessageColor);
                 }

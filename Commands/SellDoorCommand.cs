@@ -4,6 +4,7 @@ using Rocket.Unturned.Player;
 using SDG.Framework.Utilities;
 using SDG.Unturned;
 using SellDoor.Models;
+using SellDoor.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace SellDoor.Commands
 
         public string Name => "selldoor";
 
-        public string Help => "Puts the door you are looking at on sale";
+        public string Help => "Puts the door player is pointing at on sale";
 
         public string Syntax => "<price>";
 
@@ -37,27 +38,27 @@ namespace SellDoor.Commands
 
             if (!decimal.TryParse(command[0], out decimal price))
             {
-                UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("SellDoorIncorrectPrice"), SellDoorPlugin.Instance.MessageColor);
+                UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("SellDoorWrongPrice", command[0]), SellDoorPlugin.Instance.MessageColor);
                 return;
             }
 
             UnturnedPlayer player = (UnturnedPlayer)caller;
             InteractableDoorHinge doorHinge;
-            RaycastHit hit;
 
-            if (PhysicsUtility.raycast(new Ray(player.Player.look.aim.position, player.Player.look.aim.forward), out hit, 4, RayMasks.BARRICADE_INTERACT)
-                && (doorHinge = hit.transform.GetComponent<InteractableDoorHinge>()) != null)
+            if (PhysicsUtility.raycast(new Ray(player.Player.look.aim.position, player.Player.look.aim.forward), out RaycastHit hit, 
+                4, RayMasks.BARRICADE_INTERACT) && (doorHinge = hit.transform.GetComponent<InteractableDoorHinge>()) != null)
             {
                 if (doorHinge.door.owner == player.CSteamID)
                 {
-                    SellDoorPlugin.Instance.DoorsCache.Add(doorHinge.door.transform, new DoorData(player.CSteamID.m_SteamID, price,
-                        new ConvertablePosition(player.Position)));
+                    UnturnedUtility.ChangeBarricadeOwner(doorHinge.door.transform, 0, 0);
+                    SellDoorPlugin.Instance.DoorsCache.Add(doorHinge.door.transform, new DoorData(player.CSteamID.m_SteamID, price));
                     UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("SellDoorSuccess", price.ToString("C")), SellDoorPlugin.Instance.MessageColor);
-                } else
+                }
+                else
                 {
                     UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("SellDoorNotOwner"), SellDoorPlugin.Instance.MessageColor);
+                    return;
                 }
-
             } else
             {
                 UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("SellDoorNotFound"), SellDoorPlugin.Instance.MessageColor);

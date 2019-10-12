@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BFCBAA0E-E5C0-4792-B342-929466A77776}</ProjectGuid>
+    <ProjectGuid>{6FA927BA-23C7-4426-8DCC-BC4E61D6F5DD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SellDoor</RootNamespace>
@@ -37,6 +37,10 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>lib\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Rocket.API">
       <HintPath>lib\Rocket.API.dll</HintPath>
     </Reference>
@@ -54,6 +58,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Uconomy">
+      <HintPath>lib\Uconomy.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>lib\UnityEngine.dll</HintPath>
     </Reference>
@@ -61,17 +68,20 @@
       <HintPath>lib\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\Unturned\Unturned_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>lib\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\BuyDoorCommand.cs" />
     <Compile Include="Commands\CostDoorCommand.cs" />
     <Compile Include="Commands\SellDoorCommand.cs" />
     <Compile Include="Models\ConvertablePosition.cs" />
-    <Compile Include="Models\DoorData.cs" />
+    <Compile Include="Models\Door.cs" />
     <Compile Include="SellDoorConfiguration.cs" />
     <Compile Include="SellDoorPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\DataManager.cs" />
+    <Compile Include="Utilities\UnturnedUtility.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
