@@ -1,12 +1,12 @@
 ﻿using Rocket.API;
-using SellDoor.Models;
+using RestoreMonarchy.SellDoor.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SellDoor
+namespace RestoreMonarchy.SellDoor
 {
     public class SellDoorConfiguration : IRocketPluginConfiguration
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using UnityEngine;
 
-namespace SellDoor.Models
+namespace RestoreMonarchy.SellDoor.Models
 {
     public class ConvertablePosition
     {

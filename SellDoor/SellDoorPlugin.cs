@@ -3,15 +3,15 @@ using Rocket.Core.Logging;
 using Rocket.Core.Plugins;
 using Rocket.Unturned.Chat;
 using SDG.Unturned;
-using SellDoor.Models;
-using SellDoor.Utilities;
+using RestoreMonarchy.SellDoor.Models;
+using RestoreMonarchy.SellDoor.Utilities;
 using Steamworks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
 
-namespace SellDoor
+namespace RestoreMonarchy.SellDoor
 {
     public class SellDoorPlugin : RocketPlugin<SellDoorConfiguration>
     {
