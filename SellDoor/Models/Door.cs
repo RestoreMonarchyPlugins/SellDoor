@@ -1,25 +1,22 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+using UnityEngine;
 
 namespace RestoreMonarchy.SellDoor.Models
 {
-    public class DoorData
+    public class Door : TransformBase
     {
-        public DoorData() { }
+        public Door() { }
 
-        public DoorData(ulong owner, decimal price, ConvertablePosition position = null)
-        {
-            SellerID = owner;
-            Price = price;
-            Position = position;
-        }
-
-        public ulong SellerID { get; set; }
+        public int Id { get; set; }
+        public string OwnerId { get; set; }
+        public string OwnerName { get; set; }
         public decimal Price { get; set; }
-        public ConvertablePosition Position { get; set; }
+        public bool IsSold { get; set; }
+
+        public List<DoorItem> Items { get; set; }
+
+        [JsonIgnore]
+        public string PriceString => Price.ToString("N");
     }
 }

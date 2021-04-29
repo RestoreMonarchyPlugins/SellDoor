@@ -1,17 +1,59 @@
 ﻿using Rocket.API;
-using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
-using SDG.Framework.Utilities;
 using SDG.Unturned;
 using RestoreMonarchy.SellDoor.Models;
-using RestoreMonarchy.SellDoor.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
+using RestoreMonarchy.SellDoor.Helpers;
 
 namespace RestoreMonarchy.SellDoor.Commands
 {
     public class SellDoorCommand : IRocketCommand
     {
+        private SellDoorPlugin pluginInstance => SellDoorPlugin.Instance;
+
+        public void Execute(IRocketPlayer caller, string[] command)
+        {
+            if (command.Length < 1)
+            {
+                MessageHelper.Send(caller, "SellDoorFormat");
+                return;
+            }
+
+            if (!decimal.TryParse(command[0], out decimal price))
+            {
+                MessageHelper.Send(caller, "SellDoorWrongPrice", command[0]);
+                return;
+            }
+
+            UnturnedPlayer player = (UnturnedPlayer)caller;
+
+            Transform transform = RaycastHelper.GetBarricadeTransform(player.Player, out BarricadeData barricadeData);
+
+            if (transform == null || barricadeData.barricade.asset.build != EBuild.DOOR)
+            {
+                MessageHelper.Send(caller, "DoorNotLooking");
+                return;
+            }
+
+            if (barricadeData.owner != player.CSteamID.m_SteamID)
+            {
+                MessageHelper.Send(caller, "DoorNotOwner");
+                return;
+            }
+
+            Door door = pluginInstance.DoorService.GetDoor(transform);
+
+            if (door != null)
+            {
+                MessageHelper.Send(caller, "DoorAlreadyOnSale");
+                return;
+            }
+
+            door = pluginInstance.DoorService.SellDoor(transform, price, player.Player);
+            MessageHelper.Send(caller, "SellDoorSuccess", door.Id, door.PriceString);
+        }
+
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
         public string Name => "selldoor";
@@ -22,43 +64,6 @@ namespace RestoreMonarchy.SellDoor.Commands
 
         public List<string> Aliases => new List<string>();
 
-        public List<string> Permissions => new List<string>();
-
-        public void Execute(IRocketPlayer caller, string[] command)
-        {
-            if (command.Length < 1)
-            {
-                UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("SellDoorFormat"), SellDoorPlugin.Instance.MessageColor);
-                return;
-            }
-
-            if (!decimal.TryParse(command[0], out decimal price))
-            {
-                UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("SellDoorWrongPrice", command[0]), SellDoorPlugin.Instance.MessageColor);
-                return;
-            }
-
-            UnturnedPlayer player = (UnturnedPlayer)caller;
-            InteractableDoorHinge doorHinge;
-
-            if (PhysicsUtility.raycast(new Ray(player.Player.look.aim.position, player.Player.look.aim.forward), out RaycastHit hit, 
-                4, RayMasks.BARRICADE_INTERACT) && (doorHinge = hit.transform.GetComponent<InteractableDoorHinge>()) != null)
-            {
-                if (doorHinge.door.owner == player.CSteamID)
-                {
-                    UnturnedUtility.ChangeBarricadeOwner(doorHinge.door.transform, 0, 0);
-                    SellDoorPlugin.Instance.DoorsCache.Add(doorHinge.door.transform, new DoorData(player.CSteamID.m_SteamID, price));
-                    UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("SellDoorSuccess", price.ToString("C")), SellDoorPlugin.Instance.MessageColor);
-                }
-                else
-                {
-                    UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("SellDoorNotOwner"), SellDoorPlugin.Instance.MessageColor);
-                    return;
-                }
-            } else
-            {
-                UnturnedChat.Say(caller, SellDoorPlugin.Instance.Translate("SellDoorNotFound"), SellDoorPlugin.Instance.MessageColor);
-            }
-        }
+        public List<string> Permissions => new List<string>();        
     }
 }
