@@ -14,7 +14,7 @@ namespace RestoreMonarchy.SellDoor.Services
             door.OwnerName = player.DisplayName();
             door.IsSold = true;
 
-            door.ChangeTransformOwner(player.CSteamID(), player.GroupID());            
+            door.ChangeBarricadeOwner(player.CSteamID(), player.GroupID());            
 
             foreach (DoorItem item in door.Items)
             {
@@ -23,6 +23,8 @@ namespace RestoreMonarchy.SellDoor.Services
 
                 item.ChangeTransformOwner(player.CSteamID(), player.GroupID());
             }
+
+            door.UpdateSigns();
 
             database.Save();
         }
@@ -36,7 +38,6 @@ namespace RestoreMonarchy.SellDoor.Services
                 OwnerName = player.DisplayName(),
                 IsSold = false,
                 Items = new List<DoorItem>(),
-                IsBarricade = true,
                 Transform = transform
             };
 

@@ -3,12 +3,7 @@ using RestoreMonarchy.SellDoor.Models;
 using Rocket.API;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 
 namespace RestoreMonarchy.SellDoor.Commands
 {
@@ -35,7 +30,7 @@ namespace RestoreMonarchy.SellDoor.Commands
             DoorItem doorItem = new DoorItem();
             string name = string.Empty;
             ulong ownerId = 0;
-            doorItem.Transform = RaycastHelper.GetBarricadeTransform(player.Player, out BarricadeData barricadeData);
+            doorItem.Transform = RaycastHelper.GetBarricadeTransform(player.Player, out BarricadeData barricadeData, out BarricadeDrop drop);
             
             if (doorItem.Transform == null)
             {
@@ -45,12 +40,14 @@ namespace RestoreMonarchy.SellDoor.Commands
                     ownerId = structureData.owner;
                     name = structureData.structure.asset.itemName;
                     doorItem.IsBarricade = false;
+                    doorItem.IsSign = false;
                 }
             } else
             {
                 ownerId = barricadeData.owner;
                 name = barricadeData.barricade.asset.itemName;
                 doorItem.IsBarricade = true;
+                doorItem.IsSign = drop.interactable is InteractableSign;
             }
 
             if (doorItem.Transform == null)
@@ -62,6 +59,12 @@ namespace RestoreMonarchy.SellDoor.Commands
             if (ownerId != player.CSteamID.m_SteamID)
             {
                 MessageHelper.Send(caller, "DoorItemNotOwner", name);
+                return;
+            }
+
+            if (pluginInstance.DoorService.IsDoor(doorItem.Transform))
+            {
+                MessageHelper.Send(caller, "DoorItemAlready", name);
                 return;
             }
 
@@ -83,7 +86,7 @@ namespace RestoreMonarchy.SellDoor.Commands
 
         public string Help => "Links a barricade or structure with the door";
 
-        public string Syntax => string.Empty;
+        public string Syntax => "<doorId>";
 
         public List<string> Aliases => new List<string>();
 

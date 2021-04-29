@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using SDG.Unturned;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace RestoreMonarchy.SellDoor.Models
@@ -18,5 +20,18 @@ namespace RestoreMonarchy.SellDoor.Models
 
         [JsonIgnore]
         public string PriceString => Price.ToString("N");
+
+        public void UpdateSigns()
+        {
+            foreach (DoorItem item in Items)
+            {
+                item.UpdateSign(string.Empty);                    
+            }
+        }
+
+        public DoorItem GetDoorItem(Transform transform)
+        {
+            return Items.FirstOrDefault(i => i.Transform == transform);
+        }
     }
 }

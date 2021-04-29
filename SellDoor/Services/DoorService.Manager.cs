@@ -1,11 +1,9 @@
 ﻿using RestoreMonarchy.SellDoor.Helpers;
 using RestoreMonarchy.SellDoor.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
+using Logger = Rocket.Core.Logging.Logger;
 
 namespace RestoreMonarchy.SellDoor.Services
 {
@@ -18,10 +16,12 @@ namespace RestoreMonarchy.SellDoor.Services
             foreach (Door door in database.Doors)
             {
                 Vector3 pos = door.Position.ToVector3();
-                if (door.IsBarricade)
-                    door.Transform = RaycastHelper.GetBarricadeTransform(pos);
-                else
-                    door.Transform = RaycastHelper.GetStructureTransform(pos);
+                door.Transform = RaycastHelper.GetBarricadeTransform(pos);
+
+                if (door.Transform == null)
+                {
+                    Logger.LogWarning($"Door #{door.Id} transform not found");
+                }
 
                 foreach (DoorItem item in door.Items)
                 {
@@ -31,6 +31,11 @@ namespace RestoreMonarchy.SellDoor.Services
                         item.Transform = RaycastHelper.GetBarricadeTransform(pos);
                     else
                         item.Transform = RaycastHelper.GetStructureTransform(pos);
+
+                    if (item.Transform == null)
+                    {
+                        Logger.LogWarning($"Door #{door.Id} item transform not found");
+                    }
                 }
             }
         }
@@ -55,12 +60,33 @@ namespace RestoreMonarchy.SellDoor.Services
             return database.Doors.FirstOrDefault(d => d.Transform == transform || d.Items.Exists(i => i.Transform == transform));
         }
 
+        public Door GetDoorFromItem(Transform transform)
+        {
+            return database.Doors.FirstOrDefault(d => d.Items.Exists(i => i.Transform == transform));
+        }
+
+        public bool IsDoor(Transform transform)
+        {
+            if (database.Doors.Any(d => d.Transform == transform))
+                return true;
+
+            return database.Doors.Any(d => d.Items.Any(i => i.Transform == transform));
+        }
+
         public void AddDoorItem(Door door, DoorItem item)
         {
             if (door.Items == null)
                 door.Items = new List<DoorItem>();
 
             door.Items.Add(item);
+            item.UpdateSign(string.Empty);
+        }
+
+        public void RemoveDoorItem(Door door, Transform transform)
+        {
+            DoorItem item = door.GetDoorItem(transform);
+            door.Items.Remove(item);
+            item.UpdateSign(string.Empty);
         }
     }
 }

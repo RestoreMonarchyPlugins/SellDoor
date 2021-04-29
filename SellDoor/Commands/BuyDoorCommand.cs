@@ -1,8 +1,6 @@
 ﻿using fr34kyn01535.Uconomy;
 using Rocket.API;
-using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
-using SDG.Framework.Utilities;
 using SDG.Unturned;
 using RestoreMonarchy.SellDoor.Models;
 using System.Collections.Generic;
@@ -19,9 +17,9 @@ namespace RestoreMonarchy.SellDoor.Commands
         {
             UnturnedPlayer player = (UnturnedPlayer)caller;
 
-            Transform transform = RaycastHelper.GetBarricadeTransform(player.Player, out BarricadeData barricadeData);
+            Transform transform = RaycastHelper.GetBarricadeTransform(player.Player, out _, out BarricadeDrop drop);
 
-            if (transform == null || barricadeData.barricade.asset.build != EBuild.DOOR)
+            if (transform == null || drop.interactable as InteractableDoor == null)
             {
                 MessageHelper.Send(caller, "DoorNotLooking");
                 return;

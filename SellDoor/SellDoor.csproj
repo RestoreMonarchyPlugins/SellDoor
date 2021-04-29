@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lib.Harmony.2.0.4\lib\net45\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\lib\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -80,6 +83,7 @@
     <Compile Include="Commands\CostDoorCommand.cs" />
     <Compile Include="Commands\LinkDoorCommand.cs" />
     <Compile Include="Commands\SellDoorCommand.cs" />
+    <Compile Include="Commands\UnlinkDoorCommand.cs" />
     <Compile Include="Database\DoorsDatabase.cs" />
     <Compile Include="Extensions\PlayerExtensions.cs" />
     <Compile Include="Helpers\MessageHelper.cs" />
@@ -88,6 +92,7 @@
     <Compile Include="Models\Door.cs" />
     <Compile Include="Models\DoorItem.cs" />
     <Compile Include="Models\TransformBase.cs" />
+    <Compile Include="Patches\BarricadeManagerPatches.cs" />
     <Compile Include="SellDoorConfiguration.cs" />
     <Compile Include="SellDoorPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -95,8 +100,11 @@
     <Compile Include="Services\DoorService.Manager.cs" />
     <Compile Include="Services\DoorService.Monitoring.cs" />
     <Compile Include="Services\DoorService.Shop.cs" />
+    <Compile Include="Services\DoorService.Signs.cs" />
     <Compile Include="Storage\DataStorage.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

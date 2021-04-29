@@ -17,7 +17,7 @@ namespace RestoreMonarchy.SellDoor.Commands
             UnturnedPlayer player = (UnturnedPlayer)caller;
 
             Transform transform;
-            transform = RaycastHelper.GetBarricadeTransform(player.Player, out _);
+            transform = RaycastHelper.GetBarricadeTransform(player.Player, out _, out _);
             if (transform == null)
             {
                 transform = RaycastHelper.GetStructureTransform(player.Player, out _);

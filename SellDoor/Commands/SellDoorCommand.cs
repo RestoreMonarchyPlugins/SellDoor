@@ -28,9 +28,9 @@ namespace RestoreMonarchy.SellDoor.Commands
 
             UnturnedPlayer player = (UnturnedPlayer)caller;
 
-            Transform transform = RaycastHelper.GetBarricadeTransform(player.Player, out BarricadeData barricadeData);
+            Transform transform = RaycastHelper.GetBarricadeTransform(player.Player, out BarricadeData barricadeData, out BarricadeDrop drop);
 
-            if (transform == null || barricadeData.barricade.asset.build != EBuild.DOOR)
+            if (transform == null || drop.interactable as InteractableDoor == null)
             {
                 MessageHelper.Send(caller, "DoorNotLooking");
                 return;
