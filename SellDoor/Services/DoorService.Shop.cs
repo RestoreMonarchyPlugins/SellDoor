@@ -8,6 +8,14 @@ namespace RestoreMonarchy.SellDoor.Services
 {
     public partial class DoorService
     {
+        public void UpdateDoorPrice(Door door, decimal price, Player player)
+        {
+            door.OwnerName = player.DisplayName();
+            door.IsSold = false;
+            door.Price = price;
+            door.UpdateSigns();
+        }
+
         public void BuyDoor(Door door, Player player)
         {
             door.OwnerId = player.ID();
@@ -44,5 +52,7 @@ namespace RestoreMonarchy.SellDoor.Services
             database.AddDoor(door);
             return door;
         }
+
+        
     }
 }

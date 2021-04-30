@@ -81,6 +81,7 @@
     <Compile Include="Commands\BuyDoorCommand.cs" />
     <Compile Include="Commands\CheckDoorCommand.cs" />
     <Compile Include="Commands\CostDoorCommand.cs" />
+    <Compile Include="Commands\DeleteDoorCommand.cs" />
     <Compile Include="Commands\LinkDoorCommand.cs" />
     <Compile Include="Commands\SellDoorCommand.cs" />
     <Compile Include="Commands\UnlinkDoorCommand.cs" />

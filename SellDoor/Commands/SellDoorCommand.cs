@@ -44,9 +44,17 @@ namespace RestoreMonarchy.SellDoor.Commands
 
             Door door = pluginInstance.DoorService.GetDoor(transform);
 
+            // update door price
             if (door != null)
             {
-                MessageHelper.Send(caller, "DoorAlreadyOnSale");
+                pluginInstance.DoorService.UpdateDoorPrice(door, price, player.Player);
+                MessageHelper.Send(caller, "SellDoorSuccess", door.Id, door.PriceString);                
+                return;
+            }
+
+            if (!player.IsAdmin && !player.HasPermission("selldoor.admin"))
+            {
+                MessageHelper.Send(caller, "SellDoorNoPermission");
                 return;
             }
 

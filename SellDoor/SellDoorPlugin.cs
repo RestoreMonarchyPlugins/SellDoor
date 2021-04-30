@@ -60,6 +60,8 @@ namespace RestoreMonarchy.SellDoor
             { "DoorItemAlready", "This {0} is already linked to door" },
             { "NotDoorItem", "This {0} is not linked to any door" },
             { "UnlinkDoorSuccess", "Successfully unlinked {0} with door #{1}" },
+            { "SellDoorNoPermission", "You don't have permission to add a new door on sale" },
+            { "DeleteDoorSucccess", "Successfully deleted door #{0} with {1} items" },
 
             { "SignPropertyOwner", "Property owned by {0}" },
             { "SignForSale", "For sale for ${0}" },

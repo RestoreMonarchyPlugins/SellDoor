@@ -1,5 +1,6 @@
 ﻿using RestoreMonarchy.SellDoor.Helpers;
 using RestoreMonarchy.SellDoor.Models;
+using Steamworks;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -79,6 +80,10 @@ namespace RestoreMonarchy.SellDoor.Services
                 door.Items = new List<DoorItem>();
 
             door.Items.Add(item);
+            if (door.TryGetDoorOwners(out CSteamID steamID, out CSteamID groupID))
+            {
+                item.ChangeTransformOwner(steamID, groupID);
+            }
             item.UpdateSign(string.Empty);
         }
 
@@ -87,6 +92,12 @@ namespace RestoreMonarchy.SellDoor.Services
             DoorItem item = door.GetDoorItem(transform);
             door.Items.Remove(item);
             item.UpdateSign(string.Empty);
+        }
+
+        public void RemoveDoor(Door door)
+        {
+            database.RemoveDoor(door);
+            door.UpdateSigns();
         }
     }
 }

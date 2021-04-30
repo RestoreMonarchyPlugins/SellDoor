@@ -45,13 +45,11 @@ namespace RestoreMonarchy.SellDoor.Database
         {
             door.Id = GetNextID();
             doors.Add(door);
-            Save();
         }
 
         public void RemoveDoor(Door door)
         {
             doors.Remove(door);
-            Save();
         }
 
         public void DeleteBrokenDoors()

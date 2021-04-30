@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SDG.Unturned;
+using Steamworks;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -32,6 +33,19 @@ namespace RestoreMonarchy.SellDoor.Models
         public DoorItem GetDoorItem(Transform transform)
         {
             return Items.FirstOrDefault(i => i.Transform == transform);
+        }
+
+        public bool TryGetDoorOwners(out CSteamID steamID, out CSteamID groupID)
+        {
+            steamID = CSteamID.Nil;
+            groupID = CSteamID.Nil;
+            if (BarricadeManager.tryGetInfo(Transform, out _, out _, out _, out ushort index, out BarricadeRegion region))
+            {
+                steamID = new CSteamID(region.barricades[index].owner);
+                groupID = new CSteamID(region.barricades[index].group);
+                return true;
+            }
+            return false;
         }
     }
 }
