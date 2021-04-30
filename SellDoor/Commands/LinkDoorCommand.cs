@@ -84,7 +84,7 @@ namespace RestoreMonarchy.SellDoor.Commands
 
         public string Name => "linkdoor";
 
-        public string Help => "Links a barricade or structure with the door";
+        public string Help => "Links the selected barricade or structure to the door";
 
         public string Syntax => "<doorId>";
 

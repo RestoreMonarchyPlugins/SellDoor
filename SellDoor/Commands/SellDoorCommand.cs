@@ -40,7 +40,7 @@ namespace RestoreMonarchy.SellDoor.Commands
             {
                 MessageHelper.Send(caller, "DoorNotOwner");
                 return;
-            }
+            }   
 
             Door door = pluginInstance.DoorService.GetDoor(transform);
 
@@ -66,7 +66,7 @@ namespace RestoreMonarchy.SellDoor.Commands
 
         public string Name => "selldoor";
 
-        public string Help => "Puts the door player is pointing at on sale";
+        public string Help => "Changes the selected door to be on sale for the specified price";
 
         public string Syntax => "<price>";
 

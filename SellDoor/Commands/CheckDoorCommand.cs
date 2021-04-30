@@ -44,14 +44,12 @@ namespace RestoreMonarchy.SellDoor.Commands
 
         public string Name => "checkdoor";
 
-        public string Help => "Checks the door info";
+        public string Help => "Replies to player with door Id, price and owner name";
 
         public string Syntax => "";
 
         public List<string> Aliases => new List<string>();
 
         public List<string> Permissions => new List<string>();
-
-        
     }
 }

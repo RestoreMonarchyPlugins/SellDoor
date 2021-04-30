@@ -15,16 +15,36 @@ namespace RestoreMonarchy.SellDoor.Commands
         public void Execute(IRocketPlayer caller, string[] command)
         {
             UnturnedPlayer player = (UnturnedPlayer)caller;
-                        
-            Transform transform = RaycastHelper.GetBarricadeTransform(player.Player, out _, out BarricadeDrop drop);
 
-            if (transform == null || drop.interactable as InteractableDoor == null)
+            int doorId = 0;
+            bool flag = true;
+            if (command.Length > 0)
             {
-                MessageHelper.Send(caller, "DoorNotLooking");
-                return;
+                flag = false;
+                if (!int.TryParse(command[0], out doorId))
+                {
+                    MessageHelper.Send(caller, "WrongDoorId", command[0]);
+                    return;
+                }
             }
 
-            Door door = pluginInstance.DoorService.GetDoor(transform);
+            Door door;
+            if (flag)
+            {
+                Transform transform = RaycastHelper.GetBarricadeTransform(player.Player, out _, out BarricadeDrop drop);
+
+                if (transform == null || drop.interactable as InteractableDoor == null)
+                {
+                    MessageHelper.Send(caller, "DoorNotLooking");
+                    return;
+                }
+                door = pluginInstance.DoorService.GetDoor(transform);
+            }
+            else
+            {
+                door = pluginInstance.DoorService.GetDoor(doorId);
+            }
+             
 
             if (door == null)
             {
@@ -40,9 +60,9 @@ namespace RestoreMonarchy.SellDoor.Commands
 
         public string Name => "deletedoor";
 
-        public string Help => "Delete a door";
+        public string Help => "Deletes the selected or specified door and all its items from database";
 
-        public string Syntax => "";
+        public string Syntax => "[doorId]";
 
         public List<string> Aliases => new List<string>();
 

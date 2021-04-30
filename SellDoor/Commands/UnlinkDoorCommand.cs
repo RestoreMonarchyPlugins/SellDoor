@@ -58,7 +58,7 @@ namespace RestoreMonarchy.SellDoor.Commands
 
         public string Name => "unlinkdoor";
 
-        public string Help => "Unlink a barricade or structure from the door";
+        public string Help => "Unlinks the selected barricade or structure from the door";
 
         public string Syntax => "";
 

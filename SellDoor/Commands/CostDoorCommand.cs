@@ -45,7 +45,7 @@ namespace RestoreMonarchy.SellDoor.Commands
 
         public string Name => "costdoor";
 
-        public string Help => "Shows the price of the door";
+        public string Help => "Replies to player with the selected door price";
 
         public string Syntax => string.Empty;
 

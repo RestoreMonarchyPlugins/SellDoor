@@ -52,7 +52,7 @@ namespace RestoreMonarchy.SellDoor.Commands
 
         public string Name => "buydoor";
 
-        public string Help => "Buy the door you are pointing at";
+        public string Help => "Buys the door player is looking at";
 
         public string Syntax => string.Empty;
 

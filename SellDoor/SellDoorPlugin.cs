@@ -52,7 +52,7 @@ namespace RestoreMonarchy.SellDoor
             { "DoorAlreadyOnSale", "This door is already on sale" },
             { "DoorItemNotLooking", "You are not looking at any barricade or structure" },
             { "LinkDoorFormat", "Use: /linkdoor <doorId>" },
-            { "LinkDoorWrongDoorId", "{0} is not a valid doorId" },
+            { "WrongDoorId", "{0} is not a valid doorId" },
             { "DoorNotFound", "Door with Id {0} was not found" },
             { "DoorItemNotOwner", "You are not an owner of this {0}"},
             { "LinkDoorSuccess", "Successfully linked {0} with door #{1}" },
