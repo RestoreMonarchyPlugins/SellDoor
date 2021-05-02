@@ -5,6 +5,7 @@ using RestoreMonarchy.SellDoor.Models;
 using System.Collections.Generic;
 using UnityEngine;
 using RestoreMonarchy.SellDoor.Helpers;
+using System;
 
 namespace RestoreMonarchy.SellDoor.Commands
 {
@@ -25,6 +26,8 @@ namespace RestoreMonarchy.SellDoor.Commands
                 MessageHelper.Send(caller, "SellDoorWrongPrice", command[0]);
                 return;
             }
+
+            price = Math.Abs(price);
 
             UnturnedPlayer player = (UnturnedPlayer)caller;
 
