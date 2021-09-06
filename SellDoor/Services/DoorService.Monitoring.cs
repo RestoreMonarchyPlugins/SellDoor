@@ -20,21 +20,15 @@ namespace RestoreMonarchy.SellDoor.Services
                 shouldAllow = false;
         }
 
-        private void OnSalvageStructureRequested(CSteamID steamID, byte x, byte y, ushort index, ref bool shouldAllow)
+        private void OnSalvageStructureRequested(StructureDrop structure, SteamPlayer instigatorClient, ref bool shouldAllow)
         {
-            if (!StructureManager.tryGetRegion(x, y, out StructureRegion region))
-                return;
-
-            if (GetDoorOrItem(region.drops[index].model) != null)
+            if (GetDoorOrItem(structure.model) != null)
                 shouldAllow = false;
         }
 
-        private void OnSalvageBarricadeRequested(CSteamID steamID, byte x, byte y, ushort plant, ushort index, ref bool shouldAllow)
+        private void OnSalvageBarricadeRequested(BarricadeDrop barricade, SteamPlayer instigatorClient, ref bool shouldAllow)
         {
-            if (!BarricadeManager.tryGetRegion(x, y, plant, out BarricadeRegion region))
-                return;
-
-            if (GetDoorOrItem(region.drops[index].model) != null)
+            if (GetDoorOrItem(barricade.model) != null)
                 shouldAllow = false;
         }
     }

@@ -39,13 +39,13 @@ namespace RestoreMonarchy.SellDoor.Models
         {
             steamID = CSteamID.Nil;
             groupID = CSteamID.Nil;
-            if (BarricadeManager.tryGetInfo(Transform, out _, out _, out _, out ushort index, out BarricadeRegion region))
-            {
-                steamID = new CSteamID(region.barricades[index].owner);
-                groupID = new CSteamID(region.barricades[index].group);
-                return true;
-            }
-            return false;
+            BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(Transform);
+            if (drop == null)
+                return false;
+
+            steamID = new CSteamID(drop.GetServersideData().owner);
+            groupID = new CSteamID(drop.GetServersideData().group);
+            return true;
         }
     }
 }

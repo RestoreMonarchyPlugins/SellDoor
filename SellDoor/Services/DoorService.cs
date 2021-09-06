@@ -24,8 +24,8 @@ namespace RestoreMonarchy.SellDoor.Services
             SaveManager.onPostSave += SaveDoors;
             BarricadeManager.onDamageBarricadeRequested += OnDamageBarricadeRequested;
             StructureManager.onDamageStructureRequested += OnDamageStructureRequested;
-            BarricadeManager.onSalvageBarricadeRequested += OnSalvageBarricadeRequested;
-            StructureManager.onSalvageStructureRequested += OnSalvageStructureRequested;
+            BarricadeDrop.OnSalvageRequested_Global += OnSalvageBarricadeRequested;
+            StructureDrop.OnSalvageRequested_Global += OnSalvageStructureRequested;
         }
 
         void OnDestroy()
@@ -36,8 +36,8 @@ namespace RestoreMonarchy.SellDoor.Services
             SaveManager.onPostSave -= SaveDoors;
             BarricadeManager.onDamageBarricadeRequested -= OnDamageBarricadeRequested;
             StructureManager.onDamageStructureRequested -= OnDamageStructureRequested;
-            BarricadeManager.onSalvageBarricadeRequested -= OnSalvageBarricadeRequested;
-            StructureManager.onSalvageStructureRequested -= OnSalvageStructureRequested;
+            BarricadeDrop.OnSalvageRequested_Global -= OnSalvageBarricadeRequested;
+            StructureDrop.OnSalvageRequested_Global -= OnSalvageStructureRequested;
         }
     }
 }
