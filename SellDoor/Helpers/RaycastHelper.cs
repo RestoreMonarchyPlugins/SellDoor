@@ -21,10 +21,11 @@ namespace RestoreMonarchy.SellDoor.Helpers
                     transform = doorHinge.door.transform;
                 }
 
-                if (BarricadeManager.tryGetInfo(transform, out _, out _, out _, out ushort index, out BarricadeRegion region, out drop))
+                drop = BarricadeManager.FindBarricadeByRootTransform(transform);
+                if (drop != null)
                 {
-                    barricadeData = region.barricades[index];
-                    return region.drops[index].model;
+                    barricadeData = drop.GetServersideData();
+                    return drop.model;
                 }
             }
 
@@ -37,10 +38,11 @@ namespace RestoreMonarchy.SellDoor.Helpers
             RaycastHit hit;
             if (PhysicsUtility.raycast(new Ray(player.look.aim.position, player.look.aim.forward), out hit, 3, RayMasks.STRUCTURE_INTERACT))
             {
-                if (StructureManager.tryGetInfo(hit.transform, out _, out _, out ushort index, out StructureRegion region))
+                StructureDrop drop = StructureManager.FindStructureByRootTransform(hit.transform);
+                if (drop != null)
                 {
-                    structureData = region.structures[index];
-                    return region.drops[index].model;
+                    structureData = drop.GetServersideData();
+                    return drop.model;
                 }
             }
 
@@ -58,10 +60,7 @@ namespace RestoreMonarchy.SellDoor.Helpers
             {
                 if (transform.position == position)
                 {
-                    if (BarricadeManager.tryGetInfo(transform, out _, out _, out _, out ushort index, out BarricadeRegion region))
-                    {
-                        return region.drops[index].model;
-                    }
+                    return BarricadeManager.FindBarricadeByRootTransform(transform)?.model ?? null;
                 }
             }
             return null;
@@ -78,10 +77,7 @@ namespace RestoreMonarchy.SellDoor.Helpers
             {
                 if (transform.position == position)
                 {
-                    if (StructureManager.tryGetInfo(transform, out _, out _, out ushort index, out StructureRegion region))
-                    {
-                        return region.drops[index].model;
-                    }
+                    return StructureManager.FindStructureByRootTransform(transform)?.model ?? null;
                 }
             }
 
