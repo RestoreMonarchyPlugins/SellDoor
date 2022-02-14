@@ -27,7 +27,7 @@ namespace RestoreMonarchy.SellDoor.Extensions
 
         public static CSteamID GroupID(this Player player)
         {
-            return player.channel.owner.playerID.group;
+            return player.quests.groupID;
         }
     }
 }
