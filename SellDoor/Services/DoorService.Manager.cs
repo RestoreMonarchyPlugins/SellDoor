@@ -46,6 +46,11 @@ namespace RestoreMonarchy.SellDoor.Services
             database.Save();
         }
 
+        public int GetDoorsCount(string steamId)
+        {
+            return database.Doors.Count(x => x.OwnerId == steamId);
+        }
+
         public Door GetDoor(int doorId)
         {
             return database.Doors.FirstOrDefault(x => x.Id == doorId);

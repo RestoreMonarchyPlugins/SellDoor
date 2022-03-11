@@ -6,6 +6,7 @@ using RestoreMonarchy.SellDoor.Models;
 using System.Collections.Generic;
 using UnityEngine;
 using RestoreMonarchy.SellDoor.Helpers;
+using System.Linq;
 
 namespace RestoreMonarchy.SellDoor.Commands
 {
@@ -31,6 +32,21 @@ namespace RestoreMonarchy.SellDoor.Commands
             {
                 MessageHelper.Send(caller, "DoorNotForSale");
                 return;
+            }
+
+            int doorsCount = pluginInstance.DoorService.GetDoorsCount(player.Id);
+
+            if (doorsCount >= pluginInstance.Configuration.Instance.DefaultMaxDoors && !player.IsAdmin)
+            {
+                SellDoorLimit limit = pluginInstance.Configuration.Instance.Limits
+                    .OrderByDescending(x => x.MaxDoors)
+                    .FirstOrDefault(x => player.HasPermission(x.Permission));
+
+                if (limit == null || limit.MaxDoors <= doorsCount)
+                {
+                    MessageHelper.Send(caller, "BuyDoorLimit", doorsCount);
+                    return;
+                }
             }
 
             decimal balance = Uconomy.Instance.Database.GetBalance(caller.Id);
