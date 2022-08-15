@@ -12,7 +12,8 @@ namespace RestoreMonarchy.SellDoor.Helpers
             barricadeData = null;
             drop = null;
             RaycastHit hit;
-            if (PhysicsUtility.raycast(new Ray(player.look.aim.position, player.look.aim.forward), out hit, 3, RayMasks.BARRICADE_INTERACT))
+            Ray ray = new Ray(player.look.aim.position, player.look.aim.forward);
+            if (Physics.Raycast(ray, out hit, 3, RayMasks.BARRICADE_INTERACT))
             {
                 Transform transform = hit.transform;
                 InteractableDoorHinge doorHinge = hit.transform.GetComponent<InteractableDoorHinge>();
@@ -36,7 +37,8 @@ namespace RestoreMonarchy.SellDoor.Helpers
         {
             structureData = null;
             RaycastHit hit;
-            if (PhysicsUtility.raycast(new Ray(player.look.aim.position, player.look.aim.forward), out hit, 3, RayMasks.STRUCTURE_INTERACT))
+            Ray ray = new Ray(player.look.aim.position, player.look.aim.forward);
+            if (Physics.Raycast(ray, out hit, 3, RayMasks.STRUCTURE_INTERACT))
             {
                 StructureDrop drop = StructureManager.FindStructureByRootTransform(hit.transform);
                 if (drop != null)
