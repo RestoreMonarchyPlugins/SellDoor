@@ -23,7 +23,7 @@ namespace RestoreMonarchy.SellDoor.Commands
             
             if (!int.TryParse(command[0], out int doorId))
             {
-                MessageHelper.Send(caller, "LinkDoorWrongDoorId", command[0]);
+                MessageHelper.Send(caller, "WrongDoorId", command[0]);
                 return;
             }
 

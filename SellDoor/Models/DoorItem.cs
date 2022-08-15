@@ -25,6 +25,8 @@ namespace RestoreMonarchy.SellDoor.Models
                 return;
 
             BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(Transform);
+            if (drop == null)
+                return;
 
             InteractableSign interactableSign = drop.interactable as InteractableSign;
             if (interactableSign == null)
