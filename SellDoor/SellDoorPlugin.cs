@@ -29,6 +29,7 @@ namespace RestoreMonarchy.SellDoor
             harmony = new Harmony(HarmonyId);
             harmony.PatchAll(Assembly);
 
+            Logger.Log($"Custom version of SellDoor 2.0 with limits");
             Logger.Log($"{Name} {Assembly.GetName().Version} has been loaded!", ConsoleColor.Yellow);
         }
 
@@ -49,6 +50,7 @@ namespace RestoreMonarchy.SellDoor
             { "CostDoorPrice", "You can buy this door for ${0}" },
             { "BuyDoorSuccess", "You successfully bought this door for ${0}" },
             { "BuyDoorCantAfford", "You can't afford to buy this door. It costs: ${0}" },
+            { "BuyDoorLimit", "You can't own more than {0} doors!" },
             { "DoorAlreadyOnSale", "This door is already on sale" },
             { "DoorItemNotLooking", "You are not looking at any barricade or structure" },
             { "LinkDoorFormat", "Use: /linkdoor <doorId>" },

@@ -92,6 +92,7 @@
     <Compile Include="Models\ConvertableVector3.cs" />
     <Compile Include="Models\Door.cs" />
     <Compile Include="Models\DoorItem.cs" />
+    <Compile Include="Models\SellDoorLimit.cs" />
     <Compile Include="Models\TransformBase.cs" />
     <Compile Include="Patches\BarricadeManagerPatches.cs" />
     <Compile Include="SellDoorConfiguration.cs" />
