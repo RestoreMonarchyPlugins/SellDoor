@@ -35,8 +35,9 @@ namespace RestoreMonarchy.SellDoor.Commands
             }
 
             int doorsCount = pluginInstance.DoorService.GetDoorsCount(player.Id);
+            int maxDoors = pluginInstance.Configuration.Instance.DefaultMaxDoors;
 
-            if (doorsCount >= pluginInstance.Configuration.Instance.DefaultMaxDoors && !player.IsAdmin)
+            if (maxDoors != -1 && doorsCount >= maxDoors && !player.IsAdmin)
             {
                 SellDoorLimit limit = pluginInstance.Configuration.Instance.Limits
                     .OrderByDescending(x => x.MaxDoors)

@@ -6,13 +6,13 @@ namespace RestoreMonarchy.SellDoor
     public class SellDoorConfiguration : IRocketPluginConfiguration
     {
         public string MessageColor { get; set; }
-        public int DefaultMaxDoors { get; set; }
-        public SellDoorLimit[] Limits { get; set; }
+        public int DefaultMaxDoors { get; set; } = -1;
+        public SellDoorLimit[] Limits { get; set; } = new SellDoorLimit[0];
 
         public void LoadDefaults()
         {
             MessageColor = "yellow";
-            DefaultMaxDoors = 2;
+            DefaultMaxDoors = -1;
             Limits = new SellDoorLimit[]
             {
                 new SellDoorLimit()
