@@ -1,4 +1,5 @@
-﻿using SDG.Unturned;
+﻿using SDG.NetTransport;
+using SDG.Unturned;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,11 @@ namespace RestoreMonarchy.SellDoor.Extensions
         public static CSteamID GroupID(this Player player)
         {
             return player.quests.groupID;
+        }
+
+        public static ITransportConnection TransportConnection(this Player player)
+        {
+            return player.channel.GetOwnerTransportConnection();
         }
     }
 }

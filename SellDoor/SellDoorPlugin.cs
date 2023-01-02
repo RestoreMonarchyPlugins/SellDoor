@@ -9,12 +9,13 @@ using HarmonyLib;
 
 namespace RestoreMonarchy.SellDoor
 {
-    public class SellDoorPlugin : RocketPlugin<SellDoorConfiguration>
+    public partial class SellDoorPlugin : RocketPlugin<SellDoorConfiguration>
     {
         public static SellDoorPlugin Instance { get; private set; }
         public Color MessageColor { get; private set; }
 
         public DoorService DoorService { get; private set; }
+        public UIService UIService { get; private set; }
 
         public const string HarmonyId = "com.restoremonarchy.selldoor";
         private Harmony harmony;
@@ -25,17 +26,19 @@ namespace RestoreMonarchy.SellDoor
             MessageColor = UnturnedChat.GetColorFromName(Configuration.Instance.MessageColor, Color.green);
 
             DoorService = gameObject.AddComponent<DoorService>();
+            UIService = gameObject.AddComponent<UIService>();
 
             harmony = new Harmony(HarmonyId);
             harmony.PatchAll(Assembly);
 
-            Logger.Log($"Custom version of SellDoor 2.0 with limits");
             Logger.Log($"{Name} {Assembly.GetName().Version} has been loaded!", ConsoleColor.Yellow);
         }
 
         protected override void Unload()
         {   
             Destroy(DoorService);
+            Destroy(UIService);
+
             Logger.Log($"{Name} has been unloaded!", ConsoleColor.Yellow);
         }
 

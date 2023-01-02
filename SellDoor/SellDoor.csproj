@@ -103,6 +103,7 @@
     <Compile Include="Services\DoorService.Monitoring.cs" />
     <Compile Include="Services\DoorService.Shop.cs" />
     <Compile Include="Services\DoorService.Signs.cs" />
+    <Compile Include="Services\UIService.cs" />
     <Compile Include="Storage\DataStorage.cs" />
   </ItemGroup>
   <ItemGroup>

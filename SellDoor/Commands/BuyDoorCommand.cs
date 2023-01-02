@@ -12,26 +12,30 @@ namespace RestoreMonarchy.SellDoor.Commands
 {
     public class BuyDoorCommand : IRocketCommand
     {
-        private SellDoorPlugin pluginInstance => SellDoorPlugin.Instance;
+        private static SellDoorPlugin pluginInstance => SellDoorPlugin.Instance;
 
         public void Execute(IRocketPlayer caller, string[] command)
         {
             UnturnedPlayer player = (UnturnedPlayer)caller;
+            BuyDoor(player);
+        }
 
+        public static bool BuyDoor(UnturnedPlayer player)
+        {
             Transform transform = RaycastHelper.GetBarricadeTransform(player.Player, out _, out BarricadeDrop drop);
 
             if (transform == null || drop.interactable as InteractableDoor == null)
             {
-                MessageHelper.Send(caller, "DoorNotLooking");
-                return;
+                MessageHelper.Send(player, "DoorNotLooking");
+                return false;
             }
 
             Door door = pluginInstance.DoorService.GetDoor(transform);
 
             if (door == null || door.IsSold)
             {
-                MessageHelper.Send(caller, "DoorNotForSale");
-                return;
+                MessageHelper.Send(player, "DoorNotForSale");
+                return false;
             }
 
             int doorsCount = pluginInstance.DoorService.GetDoorsCount(player.Id);
@@ -45,24 +49,26 @@ namespace RestoreMonarchy.SellDoor.Commands
 
                 if (limit == null || limit.MaxDoors <= doorsCount)
                 {
-                    MessageHelper.Send(caller, "BuyDoorLimit", doorsCount);
-                    return;
+                    MessageHelper.Send(player, "BuyDoorLimit", doorsCount);
+                    return false;
                 }
             }
 
-            decimal balance = Uconomy.Instance.Database.GetBalance(caller.Id);
+            decimal balance = Uconomy.Instance.Database.GetBalance(player.Id);
 
             if (balance < door.Price)
             {
-                MessageHelper.Send(caller, "BuyDoorCantAfford", door.PriceString);
-                return;
+                MessageHelper.Send(player, "BuyDoorCantAfford", door.PriceString);
+                return false;
             }
 
-            Uconomy.Instance.Database.IncreaseBalance(caller.Id, -door.Price);
+            Uconomy.Instance.Database.IncreaseBalance(player.Id, -door.Price);
             Uconomy.Instance.Database.IncreaseBalance(door.OwnerId, door.Price);
             pluginInstance.DoorService.BuyDoor(door, player.Player);
 
-            MessageHelper.Send(caller, "BuyDoorSuccess", door.PriceString);
+            MessageHelper.Send(player, "BuyDoorSuccess", door.PriceString);
+
+            return true;
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
