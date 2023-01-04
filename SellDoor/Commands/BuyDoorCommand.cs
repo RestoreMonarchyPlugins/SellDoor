@@ -63,7 +63,12 @@ namespace RestoreMonarchy.SellDoor.Commands
             }
 
             Uconomy.Instance.Database.IncreaseBalance(player.Id, -door.Price);
-            Uconomy.Instance.Database.IncreaseBalance(door.OwnerId, door.Price);
+
+            if (!string.IsNullOrEmpty(door.OwnerId))
+            {
+                Uconomy.Instance.Database.IncreaseBalance(door.OwnerId, door.Price);
+            }
+
             pluginInstance.DoorService.BuyDoor(door, player.Player);
 
             MessageHelper.Send(player, "BuyDoorSuccess", door.PriceString);

@@ -70,7 +70,17 @@ namespace RestoreMonarchy.SellDoor
 
             { "SignPropertyOwner", "Property owned by {0}" },
             { "SignForSale", "For sale for ${0}" },
-            { "SignNotForSale", "Not for sale" }
+            { "SignNotForSale", "Not for sale" },
+
+            { "UI_Title", "Door #{0}" },
+            { "UI_Owner_Key", "Owner" },
+            { "UI_Price_Key", "Price" },
+            { "UI_BuyButton_Text", "Buy Property" },
+            { "UI_SellButton_Text", "Abandon Property" },
+            { "UI_Owner_Value_You", "You" },
+            { "UI_Owner_Value_Unkown", "Dusk Property Group" },
+            { "UI_Price_Value_NotForSale", "Not for sale" },
+            { "UI_Price_Value", "${0}" }
         };
     }
 }

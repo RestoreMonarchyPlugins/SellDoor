@@ -1,14 +1,11 @@
-﻿using fr34kyn01535.Uconomy;
-using RestoreMonarchy.SellDoor.Commands;
+﻿using RestoreMonarchy.SellDoor.Commands;
 using RestoreMonarchy.SellDoor.Extensions;
 using RestoreMonarchy.SellDoor.Helpers;
 using RestoreMonarchy.SellDoor.Models;
-using Rocket.Unturned.Chat;
 using Rocket.Unturned.Events;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
 using Steamworks;
-using System;
 using UnityEngine;
 
 namespace RestoreMonarchy.SellDoor.Services
@@ -62,50 +59,76 @@ namespace RestoreMonarchy.SellDoor.Services
                 return;
             }
 
-            string text1 = door.OwnerId != null ? door.OwnerName : "N/A";
-            string text2 = door.IsSold ? "N/A" : "$" + door.PriceString;
+            EffectManager.sendUIEffect(EffectId, EffectKey, player.TransportConnection(), true);
 
-            EffectManager.sendUIEffect(EffectId, EffectKey, player.TransportConnection(), true, text1, text2);
+            EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellDoorUI", false);
+            EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "BuyButton", false);
+            EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellButton", false);
 
-            if (door.OwnerId.Equals(unturnedPlayer.Id))
+            EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Title", pluginInstance.Translate("UI_Title", door.Id));
+            EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Owner_Key", pluginInstance.Translate("UI_Owner_Key"));
+            EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Price_Key", pluginInstance.Translate("UI_Price_Key"));
+
+            EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "BuyButton_Text", pluginInstance.Translate("UI_BuyButton_Text"));
+            EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "SellButton_Text", pluginInstance.Translate("UI_SellButton_Text"));
+            
+            if (string.IsNullOrEmpty(door.OwnerId))
             {
-                EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "LP", true);
+                EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Owner_Value", pluginInstance.Translate("UI_Owner_Value_Unkown"));
+            } else if (door.OwnerId == unturnedPlayer.Id)
+            {
+                EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Owner_Value", pluginInstance.Translate("UI_Owner_Value_You"));
+            } else
+            {
+                
+                EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Owner_Value", door.OwnerName);
             }
 
-            if (!door.OwnerId.Equals(unturnedPlayer.Id) && !door.IsSold)
+            if (door.IsSold)
             {
-                EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "BP", true);
+                EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Price_Value", pluginInstance.Translate("UI_Price_Value_NotForSale"));
+            } else
+            {
+                if (door.OwnerId == unturnedPlayer.Id)
+                {
+                    EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellButton", true);
+                } else
+                {
+                    EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "BuyButton", true);
+                }
+
+                EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Price_Value", pluginInstance.Translate("UI_Price_Value", door.PriceString));
             }
+
+            EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellDoorUI", true);
 
             player.enablePluginWidgetFlag(EPluginWidgetFlags.Modal);
         }
 
         private void OnEffectButtonClicked(Player player, string buttonName)
         {
-            MessageHelper.Send(buttonName);
             switch (buttonName)
             {
-                case "LP":
-                    HandleLPButtonClick(player);
+                case "SellButton":
+                    HandleSellButtonClick(player);
                     break;
-                case "BP":
-                    HandleBPButtonClick(player);
+                case "BuyButton":
+                    HandleBuyButtonClick(player);
                     break;
-                case "Close":
+                case "CloseButton":
                     HandleCloseButtonClick(player);
                     break;
             }
         }
 
-        private void HandleLPButtonClick(Player player)
+        private void HandleSellButtonClick(Player player)
         {
-            MessageHelper.Send("HandleLPButtonClick");
-
+            UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
             Transform transform = RaycastHelper.GetBarricadeTransform(player, out _, out BarricadeDrop drop);
 
             if (transform == null || drop.interactable as InteractableDoor == null)
             {
-                MessageHelper.Send("You are not looking at any door");
+                MessageHelper.Send(unturnedPlayer, "DoorNotLooking");
                 return;
             }
 
@@ -126,10 +149,8 @@ namespace RestoreMonarchy.SellDoor.Services
             player.disablePluginWidgetFlag(EPluginWidgetFlags.Modal);
         }
 
-        private void HandleBPButtonClick(Player player)
+        private void HandleBuyButtonClick(Player player)
         {
-            MessageHelper.Send("HandleBPButtonClick");
-
             UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
 
             if (BuyDoorCommand.BuyDoor(unturnedPlayer))
@@ -141,8 +162,6 @@ namespace RestoreMonarchy.SellDoor.Services
 
         private void HandleCloseButtonClick(Player player)
         {
-            MessageHelper.Send("HandleCloseButtonClick");
-
             EffectManager.askEffectClearByID(EffectId, player.TransportConnection());
             player.disablePluginWidgetFlag(EPluginWidgetFlags.Modal);
         }
