@@ -78,6 +78,7 @@ namespace RestoreMonarchy.SellDoor.Services
             } else if (door.OwnerId == unturnedPlayer.Id)
             {
                 EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Owner_Value", pluginInstance.Translate("UI_Owner_Value_You"));
+                EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellButton", true);
             } else
             {
                 
@@ -89,10 +90,7 @@ namespace RestoreMonarchy.SellDoor.Services
                 EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Price_Value", pluginInstance.Translate("UI_Price_Value_NotForSale"));
             } else
             {
-                if (door.OwnerId == unturnedPlayer.Id)
-                {
-                    EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellButton", true);
-                } else
+                if (door.OwnerId != unturnedPlayer.Id)
                 {
                     EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "BuyButton", true);
                 }
