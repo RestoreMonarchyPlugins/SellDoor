@@ -1,11 +1,11 @@
-﻿using Rocket.API.Collections;
+﻿using HarmonyLib;
+using RestoreMonarchy.SellDoor.Services;
+using Rocket.API.Collections;
 using Rocket.Core.Plugins;
 using Rocket.Unturned.Chat;
 using System;
 using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
-using RestoreMonarchy.SellDoor.Services;
-using HarmonyLib;
 
 namespace RestoreMonarchy.SellDoor
 {
@@ -26,7 +26,10 @@ namespace RestoreMonarchy.SellDoor
             MessageColor = UnturnedChat.GetColorFromName(Configuration.Instance.MessageColor, Color.green);
 
             DoorService = gameObject.AddComponent<DoorService>();
-            UIService = gameObject.AddComponent<UIService>();
+            if (Configuration.Instance.EnableUI)
+            {
+                UIService = gameObject.AddComponent<UIService>();
+            }
 
             harmony = new Harmony(HarmonyId);
             harmony.PatchAll(Assembly);
@@ -37,7 +40,10 @@ namespace RestoreMonarchy.SellDoor
         protected override void Unload()
         {   
             Destroy(DoorService);
-            Destroy(UIService);
+            if (UIService != null)
+            {
+                Destroy(UIService);
+            }            
 
             Logger.Log($"{Name} has been unloaded!", ConsoleColor.Yellow);
         }

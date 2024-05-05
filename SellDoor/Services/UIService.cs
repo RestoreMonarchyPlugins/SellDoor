@@ -16,13 +16,8 @@ namespace RestoreMonarchy.SellDoor.Services
 
         private DoorService doorService => pluginInstance.DoorService;
 
-        private const ushort EffectId = 54600;
+        private ushort EffectId => pluginInstance.Configuration.Instance.EffectId;
         private const short EffectKey = 27300;
-
-        void Awake()
-        {
-
-        }
 
         void Start()
         {
@@ -62,8 +57,8 @@ namespace RestoreMonarchy.SellDoor.Services
             EffectManager.sendUIEffect(EffectId, EffectKey, player.TransportConnection(), true);
 
             EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellDoorUI", false);
-            EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "BuyButton", false);
-            EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellButton", false);
+            EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellDoorUI_BuyButton", false);
+            EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellDoorUI_SellButton", false);
 
             EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Title", pluginInstance.Translate("UI_Title", door.Id));
             EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Owner_Key", pluginInstance.Translate("UI_Owner_Key"));
@@ -78,7 +73,7 @@ namespace RestoreMonarchy.SellDoor.Services
             } else if (door.OwnerId == unturnedPlayer.Id)
             {
                 EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Owner_Value", pluginInstance.Translate("UI_Owner_Value_You"));
-                EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellButton", true);
+                EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellDoorUI_SellButton", true);
             } else
             {
                 
@@ -92,7 +87,7 @@ namespace RestoreMonarchy.SellDoor.Services
             {
                 if (door.OwnerId != unturnedPlayer.Id)
                 {
-                    EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "BuyButton", true);
+                    EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellDoorUI_BuyButton", true);
                 }
 
                 EffectManager.sendUIEffectText(EffectKey, player.TransportConnection(), true, "Price_Value", pluginInstance.Translate("UI_Price_Value", door.PriceString));
@@ -107,13 +102,13 @@ namespace RestoreMonarchy.SellDoor.Services
         {
             switch (buttonName)
             {
-                case "SellButton":
+                case "SellDoorUI_SellButton":
                     HandleSellButtonClick(player);
                     break;
-                case "BuyButton":
+                case "SellDoorUI_BuyButton":
                     HandleBuyButtonClick(player);
                     break;
-                case "CloseButton":
+                case "SellDoorUI_CloseButton":
                     HandleCloseButtonClick(player);
                     break;
             }
