@@ -1,6 +1,10 @@
 # Sell Door
 Simple apartment and house plugin for roleplay servers.
 
+## Credits
+* **Ewad the Sauce God** for sharing his custom UI
+* **battletom1233** for sponsoring the addition of the UI to the plugin
+
 ## Features
 * Players can buy and sell their doors
 * Admins have to configure the doors to be sellable
