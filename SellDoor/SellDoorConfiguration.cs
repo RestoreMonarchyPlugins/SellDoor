@@ -7,7 +7,7 @@ namespace RestoreMonarchy.SellDoor
     {
         public string MessageColor { get; set; }
         public bool EnableUI { get; set; }
-        public ushort EffectId { get; set; }
+        public ushort EffectId { get; set; } = 54600;
         public int DefaultMaxDoors { get; set; } = -1;
         public SellDoorLimit[] Limits { get; set; } = [];
 
