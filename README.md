@@ -14,7 +14,7 @@ Simple apartment and house plugin for roleplay servers.
 * **battletom1233** for sponsoring the addition of the UI to the plugin
 
 ## Workshop (optional)
-[Sell Door UI](https://steamcommunity.com/sharedfiles/filedetails/?id=3239860033) - `3239860033`
+[Sell Door UI](https://steamcommunity.com/sharedfiles/filedetails/?id=3239968404) - `3239968404`
 
 ## Commands
 * **/selldoor <price\>** – Puts the door on sale

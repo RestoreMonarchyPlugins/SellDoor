@@ -35,7 +35,9 @@ namespace RestoreMonarchy.SellDoor.Services
         {
             Player player = unturnedPlayer.Player;
 
-            if (gesture != UnturnedPlayerEvents.PlayerGesture.PunchRight)
+            if (gesture != UnturnedPlayerEvents.PlayerGesture.PunchRight 
+                && gesture != UnturnedPlayerEvents.PlayerGesture.PunchLeft
+                && gesture != UnturnedPlayerEvents.PlayerGesture.Point)
             {
                 return;
             }
@@ -96,6 +98,7 @@ namespace RestoreMonarchy.SellDoor.Services
             EffectManager.sendUIEffectVisibility(EffectKey, player.TransportConnection(), true, "SellDoorUI", true);
 
             player.enablePluginWidgetFlag(EPluginWidgetFlags.Modal);
+            player.disablePluginWidgetFlag(EPluginWidgetFlags.ShowCenterDot);
         }
 
         private void OnEffectButtonClicked(Player player, string buttonName)
@@ -140,6 +143,7 @@ namespace RestoreMonarchy.SellDoor.Services
 
             EffectManager.askEffectClearByID(EffectId, player.TransportConnection());
             player.disablePluginWidgetFlag(EPluginWidgetFlags.Modal);
+            player.enablePluginWidgetFlag(EPluginWidgetFlags.ShowCenterDot);
         }
 
         private void HandleBuyButtonClick(Player player)
@@ -150,6 +154,7 @@ namespace RestoreMonarchy.SellDoor.Services
             {
                 EffectManager.askEffectClearByID(EffectId, player.TransportConnection());
                 player.disablePluginWidgetFlag(EPluginWidgetFlags.Modal);
+                player.enablePluginWidgetFlag(EPluginWidgetFlags.ShowCenterDot);
             }
         }
 
@@ -157,6 +162,7 @@ namespace RestoreMonarchy.SellDoor.Services
         {
             EffectManager.askEffectClearByID(EffectId, player.TransportConnection());
             player.disablePluginWidgetFlag(EPluginWidgetFlags.Modal);
+            player.enablePluginWidgetFlag(EPluginWidgetFlags.ShowCenterDot);
         }
     }
 }
