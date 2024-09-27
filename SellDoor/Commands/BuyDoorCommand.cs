@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using RestoreMonarchy.SellDoor.Helpers;
 using System.Linq;
+using Rocket.Core;
+using Logger = Rocket.Core.Logging.Logger;
 
 namespace RestoreMonarchy.SellDoor.Commands
 {
@@ -54,7 +56,14 @@ namespace RestoreMonarchy.SellDoor.Commands
                 }
             }
 
-            decimal balance = Uconomy.Instance.Database.GetBalance(player.Id);
+            if (!UconomyHelper.IsUconomyInstalled())
+            {
+                MessageHelper.Send(player, "You can't buy this door, because Uconomy plugin is not installed on this server.");
+                Logger.LogError("Uconomy must be installed and loaded for the Sell Door plugin to work properly!");
+                return false;
+            }
+
+            decimal balance = UconomyHelper.GetBalance(player.Id);
 
             if (balance < door.Price)
             {
@@ -62,11 +71,11 @@ namespace RestoreMonarchy.SellDoor.Commands
                 return false;
             }
 
-            Uconomy.Instance.Database.IncreaseBalance(player.Id, -door.Price);
+            UconomyHelper.IncreaseBalance(player.Id, -door.Price);
 
             if (!string.IsNullOrEmpty(door.OwnerId))
             {
-                Uconomy.Instance.Database.IncreaseBalance(door.OwnerId, door.Price);
+                UconomyHelper.IncreaseBalance(door.OwnerId, door.Price);
             }
 
             pluginInstance.DoorService.BuyDoor(door, player.Player);
