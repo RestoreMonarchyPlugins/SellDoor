@@ -33,12 +33,12 @@ namespace RestoreMonarchy.SellDoor.Commands
             {
                 Transform transform = RaycastHelper.GetBarricadeTransform(player.Player, out _, out BarricadeDrop drop);
 
-                if (transform == null || drop.interactable as InteractableDoor == null)
+                if (transform == null || (drop.interactable as InteractableDoor == null && drop.interactable as InteractableSign == null))
                 {
                     MessageHelper.Send(caller, "DoorNotLooking");
                     return;
                 }
-                door = pluginInstance.DoorService.GetDoor(transform);
+                door = pluginInstance.DoorService.GetDoorOrItem(transform);
             }
             else
             {

@@ -44,12 +44,12 @@ namespace RestoreMonarchy.SellDoor.Services
 
             Transform transform = RaycastHelper.GetBarricadeTransform(player, out _, out BarricadeDrop drop);
 
-            if (transform == null || drop.interactable as InteractableDoor == null)
+            if (transform == null || (drop.interactable as InteractableDoor == null && drop.interactable as InteractableSign == null))
             {
                 return;
             }
 
-            Door door = doorService.GetDoor(transform);
+            Door door = doorService.GetDoorOrItem(transform);
 
             if (door == null)
             {
@@ -140,6 +140,8 @@ namespace RestoreMonarchy.SellDoor.Services
             {
                 item.ChangeTransformOwner(CSteamID.Nil, CSteamID.Nil);
             }
+            
+            door.UpdateSigns();
 
             EffectManager.askEffectClearByID(EffectId, player.TransportConnection());
             player.disablePluginWidgetFlag(EPluginWidgetFlags.Modal);

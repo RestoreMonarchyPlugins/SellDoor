@@ -1,5 +1,4 @@
-﻿using SDG.Framework.Utilities;
-using SDG.Unturned;
+﻿using SDG.Unturned;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,10 +15,11 @@ namespace RestoreMonarchy.SellDoor.Helpers
             if (Physics.Raycast(ray, out hit, 3, RayMasks.BARRICADE_INTERACT))
             {
                 Transform transform = hit.transform;
-                InteractableDoorHinge doorHinge = hit.transform.GetComponent<InteractableDoorHinge>();
-                if (doorHinge != null)
+
+                InteractableDoor door = transform.GetComponentInParent<InteractableDoor>();
+                if (door != null)
                 {
-                    transform = doorHinge.door.transform;
+                    transform = door.transform;
                 }
 
                 drop = BarricadeManager.FindBarricadeByRootTransform(transform);
