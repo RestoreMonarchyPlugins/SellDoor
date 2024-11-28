@@ -27,7 +27,7 @@ namespace RestoreMonarchy.SellDoor.Commands
                 return;
             }
 
-            DoorItem doorItem = new DoorItem();
+            DoorItem doorItem = new();
             string name = string.Empty;
             ulong ownerId = 0;
             doorItem.Transform = RaycastHelper.GetBarricadeTransform(player.Player, out BarricadeData barricadeData, out BarricadeDrop drop);
@@ -40,14 +40,16 @@ namespace RestoreMonarchy.SellDoor.Commands
                     ownerId = structureData.owner;
                     name = structureData.structure.asset.itemName;
                     doorItem.IsBarricade = false;
-                    doorItem.IsSign = false;
+                    doorItem.AssetId = structureData.structure.asset.GUID;
+                    doorItem.AssetName = structureData.structure.asset.itemName;
                 }
             } else
             {
                 ownerId = barricadeData.owner;
                 name = barricadeData.barricade.asset.itemName;
                 doorItem.IsBarricade = true;
-                doorItem.IsSign = drop.interactable is InteractableSign;
+                doorItem.AssetId = barricadeData.barricade.asset.GUID;
+                doorItem.AssetName = barricadeData.barricade.asset.itemName;
             }
 
             if (doorItem.Transform == null)

@@ -18,10 +18,21 @@ namespace RestoreMonarchy.SellDoor.Services
             {
                 Vector3 pos = door.Position.ToVector3();
                 door.Transform = RaycastHelper.GetBarricadeTransform(pos);
+                ulong ownerId = 0;
+                if (door.OwnerId != null)
+                {
+                    ownerId = ulong.Parse(door.OwnerId);
+                }
 
                 if (door.Transform == null)
                 {
-                    Logger.LogWarning($"Door #{door.Id} transform not found");
+                    if (door.Restore(ownerId, 0))
+                    {
+                        Logger.Log($"Door #{door.Id} was restored");
+                    } else
+                    {
+                        Logger.Log($"Door #{door.Id} failed to restore");
+                    }                    
                 }
 
                 foreach (DoorItem item in door.Items)
@@ -29,13 +40,27 @@ namespace RestoreMonarchy.SellDoor.Services
                     pos = item.Position.ToVector3();
 
                     if (item.IsBarricade)
+                    {
                         item.Transform = RaycastHelper.GetBarricadeTransform(pos);
-                    else
+                    } else
+                    {
                         item.Transform = RaycastHelper.GetStructureTransform(pos);
+                    }
 
                     if (item.Transform == null)
                     {
-                        Logger.LogWarning($"Door #{door.Id} item transform not found");
+                        if (item.Restore(ownerId, 0))
+                        {
+                            Logger.Log($"Door #{door.Id} item was restored");
+                        } else
+                        {
+                            Logger.Log($"Door #{door.Id} item failed to restore");
+                        }                        
+                    }
+
+                    if (item != null)
+                    {
+                        item.UpdateSign(string.Empty);
                     }
                 }
             }
@@ -63,12 +88,22 @@ namespace RestoreMonarchy.SellDoor.Services
 
         public Door GetDoorOrItem(Transform transform)
         {
-            return database.Doors.FirstOrDefault(d => d.Transform == transform || d.Items.Exists(i => i.Transform == transform));
+            if (database.Doors == null)
+            {
+                return null;
+            }
+
+            return database.Doors.FirstOrDefault(d => d.Transform == transform || (d.Items != null && d.Items.Exists(i => i.Transform == transform)));
         }
 
         public Door GetDoorFromItem(Transform transform)
         {
-            return database.Doors.FirstOrDefault(d => d.Items.Exists(i => i.Transform == transform));
+            if (database.Doors == null)
+            {
+                return null;
+            }
+
+            return database.Doors.FirstOrDefault(d => d.Items != null && d.Items.Exists(i => i.Transform == transform));
         }
 
         public bool IsDoor(Transform transform)
@@ -82,7 +117,9 @@ namespace RestoreMonarchy.SellDoor.Services
         public void AddDoorItem(Door door, DoorItem item)
         {
             if (door.Items == null)
-                door.Items = new List<DoorItem>();
+            {
+                door.Items = [];
+            }                
 
             door.Items.Add(item);
             if (door.TryGetDoorOwners(out CSteamID steamID, out CSteamID groupID))

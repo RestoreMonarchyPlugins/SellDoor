@@ -61,7 +61,7 @@ namespace RestoreMonarchy.SellDoor.Commands
                 return;
             }
 
-            door = pluginInstance.DoorService.SellDoor(transform, price, player.Player);
+            door = pluginInstance.DoorService.SellDoor(drop, price, player.Player);
             MessageHelper.Send(caller, "SellDoorSuccess", door.Id, door.PriceString);
         }
 

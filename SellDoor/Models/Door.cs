@@ -41,7 +41,9 @@ namespace RestoreMonarchy.SellDoor.Models
             groupID = CSteamID.Nil;
             BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(Transform);
             if (drop == null)
+            {
                 return false;
+            }                
 
             steamID = new CSteamID(drop.GetServersideData().owner);
             groupID = new CSteamID(drop.GetServersideData().group);

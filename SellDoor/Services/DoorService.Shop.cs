@@ -1,8 +1,6 @@
 ﻿using RestoreMonarchy.SellDoor.Extensions;
 using RestoreMonarchy.SellDoor.Models;
 using SDG.Unturned;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace RestoreMonarchy.SellDoor.Services
 {
@@ -37,22 +35,22 @@ namespace RestoreMonarchy.SellDoor.Services
             database.Save();
         }
 
-        public Door SellDoor(Transform transform, decimal price, Player player)
+        public Door SellDoor(BarricadeDrop barricadeDrop, decimal price, Player player)
         {
-            Door door = new Door()
+            Door door = new()
             {
                 Price = price,
                 OwnerId = player.ID(),
                 OwnerName = player.DisplayName(),
                 IsSold = false,
-                Items = new List<DoorItem>(),
-                Transform = transform
+                Items = [],
+                Transform = barricadeDrop.model,
+                AssetId = barricadeDrop.asset.GUID,
+                AssetName = barricadeDrop.asset.itemName
             };
-
             database.AddDoor(door);
+
             return door;
         }
-
-        
     }
 }
