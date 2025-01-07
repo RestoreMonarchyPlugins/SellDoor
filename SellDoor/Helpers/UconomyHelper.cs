@@ -1,9 +1,4 @@
 ﻿using Rocket.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RestoreMonarchy.SellDoor.Helpers
 {
@@ -14,21 +9,21 @@ namespace RestoreMonarchy.SellDoor.Helpers
             return R.Plugins.GetPlugin("Uconomy") != null;
         }
 
-        internal static void IncreaseBalance(string playerId, decimal amount)
+        internal static decimal IncreaseBalance(string playerId, decimal amount)
         {
             if (!IsUconomyInstalled())
             {
-                return;
+                throw new System.Exception("Uconomy plugin is not installed on this server.");
             }
 
-            fr34kyn01535.Uconomy.Uconomy.Instance.Database.IncreaseBalance(playerId, amount);
+            return fr34kyn01535.Uconomy.Uconomy.Instance.Database.IncreaseBalance(playerId, amount);
         }
 
         internal static decimal GetBalance(string playerId)
         {
             if (!IsUconomyInstalled())
             {
-                return 0;
+                throw new System.Exception("Uconomy plugin is not installed on this server.");
             }
 
             return fr34kyn01535.Uconomy.Uconomy.Instance.Database.GetBalance(playerId);

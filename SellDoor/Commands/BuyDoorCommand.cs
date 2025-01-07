@@ -9,6 +9,7 @@ using RestoreMonarchy.SellDoor.Helpers;
 using System.Linq;
 using Rocket.Core;
 using Logger = Rocket.Core.Logging.Logger;
+using System;
 
 namespace RestoreMonarchy.SellDoor.Commands
 {
@@ -22,14 +23,14 @@ namespace RestoreMonarchy.SellDoor.Commands
             BuyDoor(player);
         }
 
-        public static bool BuyDoor(UnturnedPlayer player)
+        public static void BuyDoor(UnturnedPlayer player)
         {
             Transform transform = RaycastHelper.GetBarricadeTransform(player.Player, out _, out BarricadeDrop drop);
 
             if (transform == null || (drop.interactable as InteractableDoor == null && drop.interactable as InteractableSign == null))
             {
                 MessageHelper.Send(player, "DoorNotLooking");
-                return false;
+                return;
             }
 
             Door door = pluginInstance.DoorService.GetDoorOrItem(transform);
@@ -37,7 +38,7 @@ namespace RestoreMonarchy.SellDoor.Commands
             if (door == null || door.IsSold)
             {
                 MessageHelper.Send(player, "DoorNotForSale");
-                return false;
+                return;
             }
 
             int doorsCount = pluginInstance.DoorService.GetDoorsCount(player.Id);
@@ -52,7 +53,7 @@ namespace RestoreMonarchy.SellDoor.Commands
                 if (limit == null || limit.MaxDoors <= doorsCount)
                 {
                     MessageHelper.Send(player, "BuyDoorLimit", doorsCount);
-                    return false;
+                    return;
                 }
             }
 
@@ -60,15 +61,14 @@ namespace RestoreMonarchy.SellDoor.Commands
             {
                 MessageHelper.Send(player, "You can't buy this door, because Uconomy plugin is not installed on this server.");
                 Logger.LogError("Uconomy must be installed and loaded for the Sell Door plugin to work properly!");
-                return false;
+                return;
             }
-
             decimal balance = UconomyHelper.GetBalance(player.Id);
 
             if (balance < door.Price)
             {
                 MessageHelper.Send(player, "BuyDoorCantAfford", door.PriceString);
-                return false;
+                return;
             }
 
             UconomyHelper.IncreaseBalance(player.Id, -door.Price);
@@ -81,8 +81,6 @@ namespace RestoreMonarchy.SellDoor.Commands
             pluginInstance.DoorService.BuyDoor(door, player.Player);
 
             MessageHelper.Send(player, "BuyDoorSuccess", door.PriceString);
-
-            return true;
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
