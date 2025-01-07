@@ -3,7 +3,7 @@ Simple apartment and house plugin for roleplay servers.
 
 ## Features
 * Players can buy and sell their doors
-* Admins have to configure the doors to be sellable
+* Admins have to configure the doors to be sellable (`selldoor.admin` permission)
 * The doors can be linked to barricades/structures
 * The doors data is saved in a `.json` file located in plugin's directory
 * The plugin supports UI for buying and selling doors
@@ -31,6 +31,7 @@ Simple apartment and house plugin for roleplay servers.
 <Permission Cooldown="0">selldoor</Permission>
 <Permission Cooldown="0">costdoor</Permission>
 <Permission Cooldown="0">buydoor</Permission>
+
 <!-- Admin Commands -->
 <Permission Cooldown="0">selldoor.admin</Permission>
 <Permission Cooldown="0">checkdoor</Permission>

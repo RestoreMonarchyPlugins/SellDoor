@@ -152,12 +152,12 @@ namespace RestoreMonarchy.SellDoor.Services
         {
             UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
 
-            if (BuyDoorCommand.BuyDoor(unturnedPlayer))
+            BuyDoorCommand.BuyDoor(unturnedPlayer, () =>
             {
                 EffectManager.askEffectClearByID(EffectId, player.TransportConnection());
                 player.disablePluginWidgetFlag(EPluginWidgetFlags.Modal);
                 player.enablePluginWidgetFlag(EPluginWidgetFlags.ShowCenterDot);
-            }
+            });
         }
 
         private void HandleCloseButtonClick(Player player)

@@ -1,13 +1,11 @@
-﻿using fr34kyn01535.Uconomy;
+﻿using RestoreMonarchy.SellDoor.Helpers;
+using RestoreMonarchy.SellDoor.Models;
 using Rocket.API;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
-using RestoreMonarchy.SellDoor.Models;
 using System.Collections.Generic;
-using UnityEngine;
-using RestoreMonarchy.SellDoor.Helpers;
 using System.Linq;
-using Rocket.Core;
+using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
 
 namespace RestoreMonarchy.SellDoor.Commands
@@ -22,14 +20,14 @@ namespace RestoreMonarchy.SellDoor.Commands
             BuyDoor(player);
         }
 
-        public static bool BuyDoor(UnturnedPlayer player)
+        public static void BuyDoor(UnturnedPlayer player, System.Action successCallback = null)
         {
             Transform transform = RaycastHelper.GetBarricadeTransform(player.Player, out _, out BarricadeDrop drop);
 
             if (transform == null || (drop.interactable as InteractableDoor == null && drop.interactable as InteractableSign == null))
             {
                 MessageHelper.Send(player, "DoorNotLooking");
-                return false;
+                return;
             }
 
             Door door = pluginInstance.DoorService.GetDoorOrItem(transform);
@@ -37,7 +35,7 @@ namespace RestoreMonarchy.SellDoor.Commands
             if (door == null || door.IsSold)
             {
                 MessageHelper.Send(player, "DoorNotForSale");
-                return false;
+                return;
             }
 
             int doorsCount = pluginInstance.DoorService.GetDoorsCount(player.Id);
@@ -52,7 +50,7 @@ namespace RestoreMonarchy.SellDoor.Commands
                 if (limit == null || limit.MaxDoors <= doorsCount)
                 {
                     MessageHelper.Send(player, "BuyDoorLimit", doorsCount);
-                    return false;
+                    return;
                 }
             }
 
@@ -60,29 +58,40 @@ namespace RestoreMonarchy.SellDoor.Commands
             {
                 MessageHelper.Send(player, "You can't buy this door, because Uconomy plugin is not installed on this server.");
                 Logger.LogError("Uconomy must be installed and loaded for the Sell Door plugin to work properly!");
-                return false;
+                return;
             }
 
-            decimal balance = UconomyHelper.GetBalance(player.Id);
-
-            if (balance < door.Price)
+            ThreadHelper.RunAsynchronously(() =>
             {
-                MessageHelper.Send(player, "BuyDoorCantAfford", door.PriceString);
-                return false;
-            }
+                decimal balance = UconomyHelper.GetBalance(player.Id);
 
-            UconomyHelper.IncreaseBalance(player.Id, -door.Price);
+                if (balance < door.Price)
+                {
+                    ThreadHelper.RunSynchronously(() =>
+                    {
+                        MessageHelper.Send(player, "BuyDoorCantAfford", door.PriceString);
+                        return;
+                    });
+                }
 
-            if (!string.IsNullOrEmpty(door.OwnerId))
-            {
-                UconomyHelper.IncreaseBalance(door.OwnerId, door.Price);
-            }
+                UconomyHelper.IncreaseBalance(player.Id, -door.Price);
 
-            pluginInstance.DoorService.BuyDoor(door, player.Player);
+                if (!string.IsNullOrEmpty(door.OwnerId))
+                {
+                    UconomyHelper.IncreaseBalance(door.OwnerId, door.Price);
+                }
 
-            MessageHelper.Send(player, "BuyDoorSuccess", door.PriceString);
+                ThreadHelper.RunSynchronously(() =>
+                {
+                    pluginInstance.DoorService.BuyDoor(door, player.Player);
 
-            return true;
+                    MessageHelper.Send(player, "BuyDoorSuccess", door.PriceString);
+                    if (successCallback != null)
+                    {
+                        successCallback();
+                    }
+                });                
+            });
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
