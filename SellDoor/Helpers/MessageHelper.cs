@@ -9,12 +9,18 @@ namespace RestoreMonarchy.SellDoor.Helpers
 
         public static void Send(IRocketPlayer player, string translationKey, params object[] placeholder)
         {
-            UnturnedChat.Say(player, pluginInstance.Translate(translationKey, placeholder).Replace("{", "<").Replace("}", ">"), pluginInstance.MessageColor, true);
+            ThreadHelper.RunSynchronously(() =>
+            {
+                UnturnedChat.Say(player, pluginInstance.Translate(translationKey, placeholder).Replace("{", "<").Replace("}", ">"), pluginInstance.MessageColor, true);
+            });            
         }
 
         public static void Send(string translationKey, params object[] placeholder)
         {
-            UnturnedChat.Say(pluginInstance.Translate(translationKey, placeholder).Replace("{", "<").Replace("}", ">"), pluginInstance.MessageColor, true);
+            ThreadHelper.RunSynchronously(() =>
+            {
+                UnturnedChat.Say(pluginInstance.Translate(translationKey, placeholder).Replace("{", "<").Replace("}", ">"), pluginInstance.MessageColor, true);
+            });            
         }
     }
 }

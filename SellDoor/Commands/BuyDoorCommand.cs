@@ -67,11 +67,8 @@ namespace RestoreMonarchy.SellDoor.Commands
 
                 if (balance < door.Price)
                 {
-                    ThreadHelper.RunSynchronously(() =>
-                    {
-                        MessageHelper.Send(player, "BuyDoorCantAfford", door.PriceString);
-                        return;
-                    });
+                    MessageHelper.Send(player, "BuyDoorCantAfford", door.PriceString);
+                    return;
                 }
 
                 UconomyHelper.IncreaseBalance(player.Id, -door.Price);
